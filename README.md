@@ -8,6 +8,11 @@ Full api documentation: http://docs.ckan.org/en/latest/api.html
 
 Usage:
 
+Load
+```javascript
+var ckan = require("node-ckan");
+```
+
 Set your server url
 ```javascript
 ckan.setServer("http://demo.ckan.org");
