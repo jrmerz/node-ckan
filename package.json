@@ -1,0 +1,25 @@
+{
+  "name": "node-ckan",
+  "description": "Wrapper for the CKAN api.",
+  "tags": [
+    "api",
+    "ckan"
+  ],
+  "version": "0.0.1",
+  "author": "Justin Merz <jrmerz@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/jrmerz/node-ckan.git"
+  },
+  "bugs": {
+    "url": "http://github.com/jrmerz/node-ckan/issues"
+  },
+  "engines": [
+    "node >= 0.8.0"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "jsdom": "~0.8.4",
+    "request": "~2.27.1"
+  }
+}
