@@ -9,16 +9,14 @@ Full api documentation: http://docs.ckan.org/en/latest/api.html
 Usage:
 
 Set your server url
-
 ```javascript
 ckan.setServer("");
 ```
 
 
 Authenticate.  You can manually set your key or login.
-
 ```javascript
-ckan.setkey("xxx-xxx-xxxx-xxxxxxxx");
+ckan.setKey("xxx-xxx-xxxx-xxxxxxxx");
 
 // or
 
@@ -29,7 +27,6 @@ ckan.login("username", "password", function(error){
 
 
 Call api.
-
 ```javascript
 ckan.exec("package_list", function(err, resp) {
 
