@@ -19,7 +19,7 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "jsdom": "~0.8.4",
-    "request": "~2.27.1"
+    "jsdom": "*",
+    "request": "*"
   }
 }
