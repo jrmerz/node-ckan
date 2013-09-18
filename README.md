@@ -10,7 +10,7 @@ Usage:
 
 Set your server url
 ```javascript
-ckan.setServer("");
+ckan.setServer("http://demo.ckan.org");
 ```
 
 
