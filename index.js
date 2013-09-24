@@ -90,9 +90,11 @@ exports.exec = function(cmd, params, callback) {
     });
 }
 
+// todo, check for read access
 function addFileResource(file, params, callback) {
     if( !file ) return callback({error:true,message:"no file provided"});
-    if( !fs.statSync(file).isFile() ) return callback({error:true,message:"no file found: "+file});
+    if( !fs.existsSync(file) ) return callback({error:true,message:"no file found: "+file});
+    if( !fs.statSync(file).isFile() ) return callback({error:true,message:"not a file: "+file});
     if( !params ) return callback({error:true,message:"no resource parameters provided"});
     if( !params.package_id ) return callback({error:true,message:"no package_id provided"});
 
@@ -119,11 +121,15 @@ function addFileResource(file, params, callback) {
               file: rest.file(file, null, fs.statSync(file).size, null, params.mimetype)
             }
         }).on('complete', function(data) {
+            // HACK: redirects seem to fire complete twice.  this is bad
+            if( !callback ) return;
+            
             if (data instanceof Error) {
                 callback(data);
             } else {
-                callback(pkg);
+                callback(null, data);
             }
+            callback = null;
         });
     });
 
@@ -183,8 +189,9 @@ function post(options) {
         config.form = options.data;
     }
 
-    request(config,
-            function (error, response, body) {
+    request(config, function (error, response, body) {
+        if( !options.callback ) return;
+        
         if (!error && response.statusCode == options.expected ) {
             options.callback();
         } else if (!error && response.statusCode == 200) {
@@ -210,7 +217,8 @@ function post(options) {
             if( !error ) error = {status:response.statusCode, body: body};
             options.callback(error);
         }
-    }
-    );
+        
+        options.callback = null;
+    });
 }
 
