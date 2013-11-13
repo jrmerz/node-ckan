@@ -57,3 +57,45 @@ ckan.exec(
 );
 ```
 
+Importer.  Helper method for importing data into ckan.
+```javascript
+ckan.import({
+  // verbose output
+  debug : true,
+
+  // by default if a package or resource alread exsits, it will be ignored
+  // set the update flag to force updates of packages and resources
+  // update: true,
+
+  // user key, you can authenticate using the setKey() and login() methods as well
+  key: "xxx-xxx-xxxx-xxxxxxxx", 
+
+  // server you wish to connect to
+  server : "http://esis.casil.ucdavis.edu", 
+
+  // list of packages you want to import.
+  packages : [
+    {
+      name : "mypackage",
+      groups : [{id: mygroup}],
+      description : "test",
+      resources : [
+        {
+          file        : "/path/to/your/file.png",
+          description : "uploading using node.js api",
+          name        : "myfile",
+          mimetype    : "image/png"
+        }
+      ]
+    }
+  ],
+
+  // you can create groups as well
+  groups : [
+    {
+      name : "mygroup"
+    }
+  ]
+});
+```
+

@@ -7,6 +7,7 @@ var request = require('request');
 var jsdom = require('jsdom');
 var rest = require('restler');
 var fs = require('fs');
+var importer = require('./ckan-importer');
 
 var key = "";
 var server = "";
@@ -58,7 +59,9 @@ exports.login = function(username, password, callback) {
     }
 }
 
-
+exports.import = function(options) {
+    importer.run(options, this);
+}
 
 exports.exec = function(cmd, params, callback) {
     if( typeof params == 'function' ) {
@@ -67,10 +70,10 @@ exports.exec = function(cmd, params, callback) {
     }
     
     // see if we are uploading a file
-    if( cmd == 'resource_create' && params.file != null ) {
+    if( (cmd == 'resource_create' || cmd == 'resource_update') && params.file != null ) {
         var file = params.file;
         delete params.file;
-        addFileResource(file, params, callback);
+        addFileResource(cmd, file, params, callback);
         return;
     }
 
@@ -91,7 +94,7 @@ exports.exec = function(cmd, params, callback) {
 }
 
 // todo, check for read access
-function addFileResource(file, params, callback) {
+function addFileResource(cmd, file, params, callback) {
     if( !file ) return callback({error:true,message:"no file provided"});
     if( !fs.existsSync(file) ) return callback({error:true,message:"no file found: "+file});
     if( !fs.statSync(file).isFile() ) return callback({error:true,message:"not a file: "+file});
@@ -108,7 +111,7 @@ function addFileResource(file, params, callback) {
     params.size = fs.statSync(file).size;
     params.resource_type = "file.upload";
     
-    exports.exec("resource_create", params, function(err, pkg){
+    exports.exec(cmd, params, function(err, pkg){
         if( err ) return callback(err);
         
         rest.post(server + '/storage/upload_handle', {
@@ -142,9 +145,6 @@ function getCkanFilename(file) {
     parts = filename.split(".");
     return root + "." + parts[parts.length-1];
 }
-
-
-
 
 //simplify requests
 function get(options) {
@@ -189,36 +189,39 @@ function post(options) {
         config.form = options.data;
     }
 
-    request(config, function (error, response, body) {
+    var completed = false;
+    function done(err, resp) {
         if( !options.callback ) return;
-        
+        if( completed ) return;
+        completed = true;
+        options.callback(err, resp);
+    }
+
+    request(config, function (error, response, body) {
         if (!error && response.statusCode == options.expected ) {
-            options.callback();
+            done();
         } else if (!error && response.statusCode == 200) {
             if( options.json ) {
                 try {
                     var data = JSON.parse(body);
-                    options.callback(null, data);
+                    done(null, data);
                 } catch(e) {
                     e.response = body;
-                    options.callback(e);
+                    done(e);
                 }
             } else {
-                options.callback(null, body);
+                done(null, body);
             }
         } else if( options.json && response.statusCode == 403 ) {
             try {
                 var data = JSON.parse(body);
-                options.callback(data);
+                done(data);
             } catch(e) {
-                options.callback({status:response.statusCode, body: body});
+                done({status:response.statusCode, body: body});
             }
         } else {
             if( !error ) error = {status:response.statusCode, body: body};
-            options.callback(error);
+            done(error);
         }
-        
-        options.callback = null;
     });
 }
-
