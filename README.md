@@ -99,3 +99,12 @@ ckan.import({
 });
 ```
 
+Exporter.  Helper method for getting all data in ckan.
+```javascript
+ckan.export({
+    // data has all groups, organizations and packages
+    callback : function(data) {
+        // do stuff
+    }
+});
+```
