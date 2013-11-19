@@ -7,7 +7,8 @@ var request = require('request');
 var jsdom = require('jsdom');
 var rest = require('restler');
 var fs = require('fs');
-var importer = require('./ckan-importer');
+var importer = require('./lib/ckan-importer');
+var exporter = require('./lib/ckan-exporter');
 
 var key = "";
 var server = "";
@@ -61,6 +62,10 @@ exports.login = function(username, password, callback) {
 
 exports.import = function(options) {
     importer.run(options, this);
+}
+
+exports.export = function(options) {
+    exporter.run(options, this);
 }
 
 exports.exec = function(cmd, params, callback) {
@@ -198,6 +203,11 @@ function post(options) {
     }
 
     request(config, function (error, response, body) {
+        if( error && !response ) {
+            console.log(error);
+            process.exit(1);
+        }
+
         if (!error && response.statusCode == options.expected ) {
             done();
         } else if (!error && response.statusCode == 200) {
