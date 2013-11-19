@@ -99,9 +99,15 @@ ckan.import({
 });
 ```
 
-Exporter.  Helper method for getting all data in ckan.
+Exporter.  Helper method for getting all data from ckan.
 ```javascript
 ckan.export({
+    // user key, you can authenticate using the setKey() and login() methods as well
+    key: "xxx-xxx-xxxx-xxxxxxxx", 
+
+    // server you wish to connect to
+    server : "http://esis.casil.ucdavis.edu", 
+
     // data has all groups, organizations and packages
     callback : function(data) {
         // do stuff
