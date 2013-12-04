@@ -71,7 +71,7 @@ ckan.import({
   key: "xxx-xxx-xxxx-xxxxxxxx", 
 
   // server you wish to connect to
-  server : "http://esis.casil.ucdavis.edu", 
+  server : "http://demo.ckan.org", 
 
   // list of packages you want to import.
   packages : [
@@ -106,7 +106,7 @@ ckan.export({
     key: "xxx-xxx-xxxx-xxxxxxxx", 
 
     // server you wish to connect to
-    server : "http://esis.casil.ucdavis.edu", 
+    server : "http://demo.ckan.org", 
 
     // data has all groups, organizations and packages
     callback : function(data) {
