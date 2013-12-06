@@ -13,12 +13,18 @@ var exporter = require('./lib/ckan-exporter');
 var key = "";
 var server = "";
 
+var showTimes = false;
+
 exports.setServer = function(current_server) {
     server = current_server;
 }
 
 exports.setKey = function(current_key) {
     key = current_key;
+}
+
+exports.showTimes = function() {
+    showTimes = true;
 }
 
 exports.login = function(username, password, callback) {
@@ -202,7 +208,11 @@ function post(options) {
         options.callback(err, resp);
     }
 
+    var t = new Date().getTime();
+    if( showTimes ) console.log("NODE-CKAN starting api request...");
+    
     request(config, function (error, response, body) {
+        if( showTimes ) console.log("NODE-CKAN REQUEST TIME: "+(new Date().getTime() - t)+"ms");
         if( error && !response ) {
             console.log(error);
             process.exit(1);
