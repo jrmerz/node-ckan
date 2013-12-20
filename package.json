@@ -21,6 +21,7 @@
   "dependencies": {
     "jsdom": "*",
     "request": "*",
-    "restler": "*"
+    "restler": "*",
+    "async": "*"
   }
 }
