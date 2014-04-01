@@ -15,6 +15,10 @@ var server = "";
 
 var showTimes = false;
 
+exports.setKeyFile = function(file) {
+    key = require(file).key;
+}
+
 exports.setServer = function(current_server) {
     server = current_server;
 }
